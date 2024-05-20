@@ -52,4 +52,10 @@ jobs:
       - name: Check OSAR 
         id : check_osar
         run: |
+          CHANGED_FILES="${{ steps.changed_files_list.outputs.changedfiles }}"
+          TARGET_FOLDER="OSAR"
+          for FILE in $CHANGED_FILES; do
+             if [[ "$FILE" == *"$TARGET_FOLDER"* ]];then
+                echo "$FILE"
+             fi
           echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
