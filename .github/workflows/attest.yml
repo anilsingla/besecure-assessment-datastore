@@ -59,29 +59,29 @@ jobs:
         id : check_osar
         run: |
           CHANGED_FILES=$(echo "${{ steps.changed-files-list.outputs.changedfiles }}")
-          echo "$CHANGED_FILES"
+          #echo "$CHANGED_FILES"
           TARGET_FOLDER="OSAR"
           for FILE in $CHANGED_FILES; do
              if [[ "$FILE" == *"$TARGET_FOLDER"* ]];then
                 
                 OLDIFS=$IFS
                 IFS='/' read -ra SEGS <<< $FILE
-                for seg in "${SEGS[@]}"; do
-                   echo -e "$seg \n"
-                   
-                done
+                #for seg in "${SEGS[@]}"; do
+                #   echo -e "$seg \n"
+                #   
+                #done
             
                 IFS=$OLDIFS
 
-                ProjectName=$SEGS[0]
-                Version=$SEGS[1]
+                ProjectName="${SEGS[0]}"
+                Version="${SEGS[1]}"
 
                 fileindex=$((${#SEGS[@]} - 1))
-                FileName=$SEGS[$fileindex]
+                FileName="${SEGS[$fileindex]}"
 
                 echo -e "PN=$ProjectName \n VN=$Version \n File=$FileName \n"
 
-                IsReady=$(jq -r 'CompletionStatus' "$FILE")
+                IsReady=$(jq -r '.CompletionStatus' "$FILE")
 
                 echo "completion Status for file $FILE is $IsReady"
 
