@@ -73,14 +73,17 @@ jobs:
             
                 IFS=$OLDIFS
 
-                NoOfSegs="${!SEGS[@]}"
-
                 ProjectName=SEGS[0]
                 Version=SEGS[1]
 
-                fileindex=$(expr $NoOfSegs - 2)
+                fileindex=$(expr ${!SEGS[@]} - 2)
                 FileName=SEGS[fileindex]
 
                 echo -e "PN=$ProjectName \n VN=$Version \n File=$FileName \n"
+
+                IsReady=$(jq -r 'CompletionStatus' "SFILE")
+
+                echo "completion Status for file $FILE is $IsReady"
+
              fi
           done
