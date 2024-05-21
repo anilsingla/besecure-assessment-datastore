@@ -23,39 +23,42 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       # Runs a single command using the runners shell
       - name: List of changed folders 
-        id : changed_folders
+        id : changed-folders
         run: |
-          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
+          echo "files=$(git diff --name-only HEAD^ HEAD)" >> "$GITHUB_OUTPUT"
         
       # Runs a set of commands using the runners shell
       - name: filer root folders
-        id : root_folders
+        id : root-folders
         run: |
-          files=$(echo "${{ steps.changed_files.outputs.files }}" | tr ' ' '\n')
+          files=$(echo "${{ steps.changed-folders.outputs.files }}" | tr ' ' '\n')
           root_folders=$(echo $files | awk -F'/' '{if (NF=2) print $1}' | sort | uniq)
-          echo "::set-outputs name=rootfolers::${root_folders}"
+          echo "rootfolders=${root-folders}" >> "$GITHUB_OUTPUT" 
 
      # Runs a single command using the runners shell
       - name: List of changed files 
-        id : changed_files_list
+        id : changed-files-list
         run: |
           git diff --name-only ${{ github.event.before }} $${{ github.sha }} >> changed_files.txt
           echo "changed files are:"
           cat changed_files.txt
-          echo "::set-output name=changedfiles::$(cat changed_files.txt | tr '\n' ' ')"
+          echo "changedfiles=$(cat changed_files.txt | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
 
     # Runs a single command using the runners shell
       - name: Check OSAR 
         id : check_osar
         run: |
-          CHANGED_FILES="${{ steps.changed_files_list.outputs.changedfiles }}"
+          CHANGED_FILES=$(echo "${{ steps.changed-files-list.outputs.changedfiles }}")
+          echo "$CHANGED_FILES"
           TARGET_FOLDER="OSAR"
           for FILE in $CHANGED_FILES; do
              if [[ "$FILE" == *"$TARGET_FOLDER"* ]];then
                 echo "$FILE"
              fi
-          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
+          done
