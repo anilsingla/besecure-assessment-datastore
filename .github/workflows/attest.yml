@@ -68,7 +68,19 @@ jobs:
                 IFS='/' read -ra SEGS <<< $FILE
                 for seg in "${SEGS[@]}"; do
                    echo -e "$seg \n"
+                   
                 done
+            
                 IFS=$OLDIFS
+
+                NoOfSegs={!SEGS[@]}
+
+                ProjectName=SEGS[0]
+                Version=SEGS[1]
+
+                fileindex=$(expr $NoOfSegs - 2)
+                FileName=SEGS[fileindex]
+
+                echo -e "PN=$ProjectName \n VN=$Version \n File=$FileName \n"
              fi
           done
