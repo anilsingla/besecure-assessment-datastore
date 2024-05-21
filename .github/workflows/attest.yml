@@ -73,11 +73,11 @@ jobs:
             
                 IFS=$OLDIFS
 
-                ProjectName=SEGS[0]
-                Version=SEGS[1]
+                ProjectName=$SEGS[0]
+                Version=$SEGS[1]
 
                 fileindex=$((${#SEGS[@]} - 1))
-                FileName=SEGS[fileindex]
+                FileName=$SEGS[$fileindex]
 
                 echo -e "PN=$ProjectName \n VN=$Version \n File=$FileName \n"
 
