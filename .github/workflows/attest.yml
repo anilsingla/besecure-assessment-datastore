@@ -76,14 +76,19 @@ jobs:
                 ProjectName=SEGS[0]
                 Version=SEGS[1]
 
-                fileindex=$(expr ${!SEGS[@]} - 2)
+                fileindex=$((${#SEGS[@]} - 1))
                 FileName=SEGS[fileindex]
 
                 echo -e "PN=$ProjectName \n VN=$Version \n File=$FileName \n"
 
-                IsReady=$(jq -r 'CompletionStatus' "SFILE")
+                IsReady=$(jq -r 'CompletionStatus' "$FILE")
 
                 echo "completion Status for file $FILE is $IsReady"
 
+                if [ "$IsReady" == "true" ] | [ "$IsReady" == "True" ] | [ "$IsReady" == "TRUE" ];then
+
+                    echo "OSAR report is complete"
+
+                fi
              fi
           done
