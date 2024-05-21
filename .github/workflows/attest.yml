@@ -31,7 +31,9 @@ jobs:
       - name: List of changed folders 
         id : changed-folders
         run: |
-          echo "files=$(git diff --name-only HEAD^ HEAD)" >> "$GITHUB_OUTPUT"
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$(git diff --name-only HEAD^ HEAD)" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
         
       # Runs a set of commands using the runners shell
       - name: filer root folders
@@ -39,7 +41,9 @@ jobs:
         run: |
           files=$(echo "${{ steps.changed-folders.outputs.files }}" | tr ' ' '\n')
           root_folders=$(echo $files | awk -F'/' '{if (NF=2) print $1}' | sort | uniq)
-          echo "rootfolders=${root-folders}" >> "$GITHUB_OUTPUT" 
+          echo "rootfolders<<EOF" >> "$GITHUB_OUTPUT"
+          echo "${root-folders}" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
      # Runs a single command using the runners shell
       - name: List of changed files 
@@ -65,5 +69,6 @@ jobs:
                 for seg in "${!SEGS[@]}"; do
                    echo -e "$seg \n"
                 done
+                IFS=$OLDIFS
              fi
           done
