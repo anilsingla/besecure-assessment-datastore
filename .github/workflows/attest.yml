@@ -73,7 +73,7 @@ jobs:
             
                 IFS=$OLDIFS
 
-                NoOfSegs={!SEGS[@]}
+                NoOfSegs="${!SEGS[@]}"
 
                 ProjectName=SEGS[0]
                 Version=SEGS[1]
