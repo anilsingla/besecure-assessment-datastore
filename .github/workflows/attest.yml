@@ -63,10 +63,10 @@ jobs:
           TARGET_FOLDER="OSAR"
           for FILE in $CHANGED_FILES; do
              if [[ "$FILE" == *"$TARGET_FOLDER"* ]];then
-                echo "$FILE"
+                
                 OLDIFS=$IFS
                 IFS='/' read -ra SEGS <<< $FILE
-                for seg in "${!SEGS[@]}"; do
+                for seg in "${SEGS[@]}"; do
                    echo -e "$seg \n"
                 done
                 IFS=$OLDIFS
